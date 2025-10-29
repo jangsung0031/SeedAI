@@ -8,11 +8,17 @@
 
 ## ✨ 주요 기능
 
-### 1. 식물 종 식별 (Image Classification)
-- **Transformers 라이브러리를 직접 사용**하여 식물 종 식별
-- Google의 Vision Transformer (ViT) 모델 활용
+### 1. 멀티 모델 식물 종 식별 (Image Classification)
+- **두 가지 AI 모델을 지원**하여 더 정확한 식물 식별
+  - **모델 1**: umutbozdag/plant-identity - 20종 식물 전문 인식 (로컬 실행)
+  - **모델 2**: PlantRecog API - 299종의 꽃을 인식하는 전문 모델
+- **자동 모델 선택**: 모델1 신뢰도 ≥ 50% 시 우선 사용, 미만 시 모델2 사용
+- **Transformers 라이브러리를 직접 사용**하여 로컬에서 식물 종 식별
 - 업로드된 이미지를 분석하여 식물 종을 정확하게 식별
 - 신뢰도 점수와 함께 상위 3개 결과 제공
+- **영어→한국어 자동 번역** (facebook/nllb-200-distilled-600M)
+- **모델 비교 테스트 페이지** 제공 - 두 모델의 결과를 직접 비교 가능
+- **📷 카메라 촬영 기능** - 모바일에서 바로 촬영하여 분석 가능
 
 ### 2. 맞춤형 관리 가이드
 - 식별된 식물에 맞는 상세한 관리법 제공
@@ -50,8 +56,12 @@
 - **TailwindCSS**: 스타일링
 - **React Icons**: 아이콘
 
-### AI 모델 (로컬 실행)
-- **식물 식별**: google/vit-base-patch16-224 (Vision Transformer)
+### AI 모델
+- **식물 식별 (멀티 모델)**:
+  - 모델 1: [umutbozdag/plant-identity](https://huggingface.co/umutbozdag/plant-identity) - 20종 식물 전문 모델 (로컬 실행)
+  - 모델 2: [PlantRecog](https://github.com/sarthakpranesh/PlantRecog) API - 299종 꽃 인식 전문 모델
+  - 자동 선택 로직: 모델1 신뢰도 ≥ 50% 시 우선 사용
+- **다국어 번역**: [facebook/nllb-200-distilled-600M](https://huggingface.co/facebook/nllb-200-distilled-600M) - 영어→한국어 자동 번역
 - **관리 가이드**: 규칙 기반 시스템
 - **성장 예측**: 설명 기반 타임라인
 
@@ -125,16 +135,66 @@ npm run dev
 
 프론트엔드가 `http://localhost:5173`에서 실행됩니다.
 
+**터미널에 표시되는 주소:**
+```
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: http://192.168.0.123:5173/
+```
+- **Local**: PC에서 접속
+- **Network**: 같은 Wi-Fi의 모바일에서 접속 (카메라 기능 사용 가능!)
+
+### 📱 모바일 테스트 (카메라 기능)
+
+**카메라 촬영 기능**을 모바일에서 테스트하려면:
+
+1. **PC와 모바일을 같은 Wi-Fi에 연결**
+2. **PC에서 프론트엔드 실행** (`npm run dev`)
+3. **터미널에 표시된 Network 주소 확인**
+   - 예: `http://192.168.0.123:5173`
+4. **모바일 브라우저에서 해당 주소로 접속**
+5. **테스트 페이지(`/test`)로 이동**
+6. **"📷 카메라로 촬영" 버튼으로 바로 촬영 가능!**
+
+**⚠️ 중요:**
+- 카메라 API는 **HTTPS** 또는 **로컬 네트워크(HTTP)**에서만 작동합니다
+- 같은 Wi-Fi 네트워크에서는 HTTP로도 카메라 사용 가능
+- 각자의 PC IP는 다르므로, 터미널에 표시된 주소를 사용하세요
+
 ## 🚀 사용 방법
 
-1. 웹 브라우저에서 `http://localhost:5173` 접속
+### 기본 사용 (PC/모바일)
+
+1. 웹 브라우저에서 `http://localhost:5173` 접속 (PC)
+   - 또는 모바일: `http://[PC의 IP]:5173` (예: `http://192.168.0.123:5173`)
 2. "지금 시작하기" 버튼 클릭
 3. 식물 사진 업로드 (드래그 앤 드롭 또는 파일 선택)
+   - **모바일**: 📷 카메라로 바로 촬영 가능!
 4. "분석 시작하기" 버튼 클릭
 5. AI 분석 결과 확인
    - 식물 종 정보
    - 상세 관리 가이드
    - 성장 예측 타임라인
+
+### 🧪 모델 테스트 페이지 (개발자용)
+
+**URL**: `/test`
+
+두 가지 AI 모델을 비교하고 테스트할 수 있는 전용 페이지:
+
+1. **자동 선택 분석 (권장)** ⚡
+   - 모델1(ViT) 신뢰도 ≥ 50% → 모델1 결과 사용
+   - 모델1 신뢰도 < 50% → 모델2(PlantRecog) 결과 사용
+   - 한국어 자동 번역 지원
+
+2. **두 모델 비교** 🔬
+   - 모델1(Google ViT): 20종 식물 전문 인식
+   - 모델2(PlantRecog): 299종 꽃 인식
+   - 신뢰도 막대 그래프로 비교
+   - 한국어 자동 번역 지원
+
+3. **이미지 입력 방식**
+   - 📁 파일 업로드 (PC/모바일)
+   - 📷 카메라 촬영 (모바일 권장)
 
 ## 📁 프로젝트 구조
 
@@ -161,7 +221,16 @@ plant-ai-web/
 │   │   ├── main.jsx           # 진입점
 │   │   ├── App.jsx            # 메인 앱
 │   │   ├── pages/             # 페이지 컴포넌트
+│   │   │   ├── Home.jsx       # 홈 페이지
+│   │   │   ├── PlantAnalysis.jsx  # 식물 분석 페이지
+│   │   │   ├── Result.jsx     # 결과 페이지
+│   │   │   └── ModelTest.jsx  # 모델 비교 테스트 페이지 (신규)
 │   │   ├── components/        # 재사용 컴포넌트
+│   │   │   ├── ImageUpload.jsx    # 이미지 업로드
+│   │   │   ├── CameraCapture.jsx  # 카메라 촬영 (신규)
+│   │   │   ├── PlantInfo.jsx      # 식물 정보
+│   │   │   ├── CareGuide.jsx      # 관리 가이드
+│   │   │   └── GrowthPreview.jsx  # 성장 예측
 │   │   ├── services/          # API 서비스
 │   │   └── styles/            # 스타일
 │   ├── package.json
@@ -173,7 +242,7 @@ plant-ai-web/
 ## 🔧 API 엔드포인트
 
 ### `POST /api/plant/analyze`
-식물 이미지를 분석합니다.
+umutbozdag/plant-identity 모델로 식물 이미지를 분석합니다 (20종 식물).
 
 **요청:**
 - Content-Type: `multipart/form-data`
@@ -211,6 +280,53 @@ plant-ai-web/
   "message": "분석이 완료되었습니다."
 }
 ```
+
+### `POST /api/plant/analyze-v2`
+PlantRecog 모델로 식물 이미지를 분석합니다 (299종 꽃 인식).
+
+**요청:**
+- Content-Type: `multipart/form-data`
+- Body: `file` (이미지 파일)
+
+**응답:** `/api/plant/analyze`와 동일한 형식
+
+### `POST /api/plant/compare`
+두 모델(umutbozdag/plant-identity + PlantRecog)의 결과를 비교합니다 (한국어 번역 포함).
+
+**요청:**
+- Content-Type: `multipart/form-data`
+- Body: `file` (이미지 파일)
+
+**응답:**
+```json
+{
+  "success": true,
+  "message": "두 모델의 분석이 완료되었습니다.",
+  "models": {
+    "vit": {
+      "name": "umutbozdag/plant-identity (20종)",
+      "result": { /* PlantIdentification (한국어 번역) */ }
+    },
+    "plantrecog": {
+      "name": "PlantRecog (299 Flowers)",
+      "result": { /* PlantIdentification (한국어 번역) */ }
+    }
+  }
+}
+```
+
+### `POST /api/plant/analyze-auto`
+자동 모델 선택으로 최적의 결과를 제공합니다 (한국어 번역 포함).
+
+**로직:**
+- 모델1 신뢰도 ≥ 50% → 모델1 결과 사용
+- 모델1 신뢰도 < 50% → 모델2 결과 사용
+
+**요청:**
+- Content-Type: `multipart/form-data`
+- Body: `file` (이미지 파일)
+
+**응답:** `/api/plant/analyze`와 동일한 형식 (한국어 번역 포함)
 
 ### `GET /health`
 서버 상태를 확인합니다.

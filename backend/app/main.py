@@ -10,10 +10,18 @@ app = FastAPI(
     version="1.0.0"
 )
 
-# CORS 설정
+# CORS 설정 (개발 환경: 모든 로컬 네트워크 허용)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.cors_origins,
+    allow_origins=[
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+        "http://192.168.0.131:5173",  # 현재 IP
+        "http://192.168.0.60:5173",   # 추가 IP
+        "*"  # 개발 환경: 모든 origin 허용 (프로덕션에서는 제거!)
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -9,11 +9,19 @@ class Settings(BaseSettings):
     api_host: str = "0.0.0.0"
     api_port: int = 8000
     
-    # CORS 설정
-    cors_origins: List[str] = ["http://localhost:5173", "http://localhost:3000"]
+    # CORS 설정 (개발 환경: 로컬 네트워크 IP 허용)
+    cors_origins: List[str] = [
+        "http://localhost:5173",
+        "http://localhost:3000",
+        "http://127.0.0.1:5173",
+        "http://127.0.0.1:3000",
+    ]
+    
+    # 개발 모드: 로컬 네트워크 IP 패턴 허용 (192.168.x.x, 10.x.x.x 등)
+    cors_allow_all_local: bool = True  # 개발용, 프로덕션에서는 False로 설정
     
     # Hugging Face 모델 설정
-    plant_classifier_model: str = "google/vit-base-patch16-224"  # 공개 모델로 변경
+    plant_classifier_model: str = "umutbozdag/plant-identity"  # 식물 전문 모델 (20종)
     text_generation_model: str = "gpt2"  # 경량 공개 모델
     image_generation_model: str = "stabilityai/sd-turbo"
     

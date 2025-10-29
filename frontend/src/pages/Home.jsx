@@ -46,16 +46,24 @@ const Home = () => {
             당신의 반려식물이 건강하게 자랄 수 있도록 도와드립니다.
           </p>
 
-          <button
-            onClick={() => navigate('/analyze')}
-            className="btn-primary text-lg inline-flex items-center group"
-          >
-            지금 시작하기
-            <FiArrowRight
-              className="ml-2 group-hover:translate-x-1 transition-transform"
-              size={24}
-            />
-          </button>
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <button
+              onClick={() => navigate('/analyze')}
+              className="btn-primary text-lg inline-flex items-center group"
+            >
+              지금 시작하기
+              <FiArrowRight
+                className="ml-2 group-hover:translate-x-1 transition-transform"
+                size={24}
+              />
+            </button>
+            <button
+              onClick={() => navigate('/test')}
+              className="btn-secondary text-lg inline-flex items-center"
+            >
+              🧪 모델 테스트
+            </button>
+          </div>
         </div>
 
         {/* 기능 소개 */}
