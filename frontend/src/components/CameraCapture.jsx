@@ -205,3 +205,4 @@ const CameraCapture = ({ onCapture }) => {
 
 export default CameraCapture;
 
+
